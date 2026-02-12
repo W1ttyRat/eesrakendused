@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="et">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width">
+  <link href="style.css" rel="stylesheet" type="text/css">
+  <title>Tic-Tac-Toe</title>
+</head>
+
+<body>
+  <h1>Trips-Traps-Trull</h1>
+  <h2>Inimene <span id="human">0</span> vs arvuti <span id="comp">0</span></h2>
+  <div class="container">
+    <div class="row border-b">
+      <div class="col border-r"></div>
+      <div class="col border-r"></div>
+      <div class="col"></div>
+    </div>
+
+    <div class="row border-b">
+      <div class="col border-r"></div>
+      <div class="col border-r"></div>
+      <div class="col"></div>
+    </div>
+
+    <div class="row">
+      <div class="col border-r"></div>
+      <div class="col border-r"></div>
+      <div class="col"></div>
+    </div>
+    <div class="btn">
+      <button onClick="reload()">New Game</button>
+      <button onClick="window.location.reload()">Reset</button>
+    </div>
+  </div>
+  <script src="script.js"></script>
+</body>
+
+</html>

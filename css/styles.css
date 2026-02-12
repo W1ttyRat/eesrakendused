@@ -1,0 +1,29 @@
+body {
+    background-color: cadetblue;
+    
+}
+
+#first {
+    border-width: 4px;
+    border-style: dotted;
+    border-radius: 3px;
+}
+
+p {
+    font-size: 20px;
+}
+
+div {
+    display: flex;
+    margin: 10px;
+    border: 2px solid black;
+    padding: 20px;
+}
+
+#first, #third{
+    justify-content: center;
+}
+
+#second {
+    justify-content: space-between;
+}
