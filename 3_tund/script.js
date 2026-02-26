@@ -24,7 +24,7 @@ function saveData() {
     localStorage.setItem("perekonnanimi", lname.value);
 }
 
-function deletData() {
+function deleteData() {
     sessionStorage.removeItem("eesnimi");
     sessionStorage.removeItem("perekonnanimi");
     localStorage.removeItem("eesnimi");
@@ -38,5 +38,5 @@ function loadData() {
 }
 
 document.getElementById("save").addEventListener("click", saveData);
-document.getElementById("delete").addEventListener("click", deletData);
+document.getElementById("delete").addEventListener("click", deleteData);
 document.getElementById("load").addEventListener("click", loadData);
