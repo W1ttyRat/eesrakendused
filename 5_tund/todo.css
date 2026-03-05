@@ -1,0 +1,77 @@
+body {
+    margin: 0px;
+    padding: 0px;
+}
+
+.task-done > div {
+    text-decoration: line-through;
+    background-color: lightgreen;
+}
+
+.todo-list {
+    list-style-type: none;
+    padding: 10px;
+    width: 100%;
+    max-width: 1200px;
+}
+
+#inputContainer, #buttonContainer {
+    display: flex;
+    justify-content: center;
+    padding: 5px;
+}
+
+#entries {
+    display: flex;
+    justify-content: center;
+}
+
+input {
+    margin: 5px;
+}
+
+ul.todo-list > li {
+    border: 1px solid lightgray;
+    padding: 5px;
+    border-radius: 10px;
+    margin-bottom: 6px;
+}
+
+ul.todo-list > li > div {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.delete-button {
+    width: 24px;
+    height: 24px;
+    border-radius: 25px;
+    border-color: red;
+    color: red;
+}
+
+.delete-button:hover {
+    color: darkred;
+    border-color: darkred;
+    cursor: pointer;
+}
+
+#addButton {
+    padding: 6px 30px;
+    background-color: black;
+    color: white;
+    border-radius: 25px;
+    font-size: 17px;
+}
+
+#addButton:hover {
+    background-color: darkgray;
+
+}
+
+input[type="text"], input[type="date"] {
+    border-radius: 5px;
+    font-size: 17px;
+    padding: 3px;
+}
