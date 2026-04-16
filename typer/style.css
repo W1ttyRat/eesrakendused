@@ -20,6 +20,16 @@ body {
     margin: 5px;
 }
 
-#info, #wordContainer {
-    /* display: none; */
+#info, #wordContainer, #counter {
+    display: none;
+}
+
+#word, #time {
+    font-size: 36px;
+    font-weight: 700;
+}
+
+#info {
+    min-height: 30px;
+    align-items: start;
 }
