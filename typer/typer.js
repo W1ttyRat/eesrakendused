@@ -13,17 +13,16 @@ class Typer {
         this.wordsTyped = 0;
         this.score = 0;
         
-        this.results = JSON.parse(localStorage.getItem("score")) || [];
+        this.results = [];
 
         this.loadFromFile();
-        this.loadResults();
     }
 
     loadResults() {
         const resultDiv = document.getElementById("results");
         resultDiv.innerHTML = "";
 
-        for (let i = 0; i < 20; i++) {
+        for (let i = 0; i < this.results.length; i++) {
             const row = document.createElement("div");
             row.textContent = `${i + 1}. ${this.results[i].name} ${this.results[i].time}`;
             resultDiv.appendChild(row);
@@ -34,8 +33,17 @@ class Typer {
         console.log("load from file sees");
         const responseFromFile = await fetch("words.txt");
         const allWords = await responseFromFile.text();
+        this.loadResultsFromFile();
 
         this.getWords(allWords);
+    }
+
+    async loadResultsFromFile() {
+        const resultsResponse = await fetch("database.txt");
+        const resultsText = await resultsResponse.text();
+
+        this.results = JSON.parse(resultsText) || [];
+        this.loadResults();
     }
 
     getWords(data) {
@@ -72,7 +80,7 @@ class Typer {
         let i = 3;
 
         let countdown = setInterval(() => {
-            document.getElementById("time").innerHTML = i;
+            document.getElementById("time").innerHTML = i-1;
             i--;
             if (i == 0) {
                 document.getElementById("counter").style.display = "none";
@@ -131,15 +139,35 @@ class Typer {
         this.saveResult();
     }
 
-    saveResult() {
+    async saveResult() {
+        await this.loadResultsFromFile();
+        
         let result = {
             name: this.name,
             time: this.score
         }
+
+        //console.log(typeof(this.results));
+        //console.log(this.results);
+
         this.results.push(result);
         this.results.sort((a,b) => parseFloat(a.time) - parseFloat(b.time));
 
         localStorage.setItem("score", JSON.stringify(this.results));
+
+        try {
+            await fetch("server.php", {
+                method: "POST",
+                headers: {"Content-Type": "application/x-www-form-urlencoded"},
+                body: "save=" + encodeURIComponent(JSON.stringify(this.results))
+            });
+            console.log("success");
+        } catch (err) {
+            alert("Failed" + err);
+        } finally {
+            console.log("Päring lõpetatud");
+            this.loadResults();
+        }
 
         console.log(this.results);
     }
