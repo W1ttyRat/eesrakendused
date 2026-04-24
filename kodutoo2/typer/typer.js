@@ -24,9 +24,30 @@ class Typer {
         const resultDiv = document.getElementById("results");
         resultDiv.innerHTML = "";
 
+        const header = document.createElement("div");
+        header.className = "resultsHeader";
+        header.innerHTML = `
+            <div class="resultRank">Koht</div>
+            <div class="resultName">Nimi</div>
+            <div class="resultTime">Aeg</div>
+            <div class="resultWPM">WPM</div>
+        `;
+        resultDiv.appendChild(header);
+
         for (let i = 0; i < this.results.length; i++) {
             const row = document.createElement("div");
-            row.textContent = `${i + 1}. ${this.results[i].name} ${this.results[i].time}`;
+            row.className = "resultRow";
+
+            const time = parseFloat(this.results[i].time);
+            const wpm = ((this.wordsInGame / time) * 60).toFixed(2);
+
+            row.innerHTML = `
+                <div class="resultRank">${i + 1}</div>
+                <div class="resultName">${this.results[i].name}</div>
+                <div class="resultTime">${this.results[i].time}s</div>
+                <div class="resultWPM">${wpm}</div>
+                `;
+
             resultDiv.appendChild(row);
         }
     }
