@@ -103,6 +103,7 @@ class Typer {
         document.querySelector("#wordContainer").style.display = "flex";
         document.querySelector("#name").style.display = "none";
         document.querySelector("#playAgain").style.display = "none";
+        document.querySelector("#wordCount").style.display = "flex";
 
         this.startTime = performance.now();
 
@@ -168,7 +169,7 @@ class Typer {
         this.typeWords = [];
 
         const allowedLengths = [];
-        for (let len = 1; len <=this.wordLength; len++) {
+        for (let len = 1; len <= this.wordLength; len++) {
             if (this.words[len] && this.words[len].length > 0) {
                 allowedLengths.push(len);
             }
@@ -204,7 +205,7 @@ class Typer {
 
     playAgain() {
         document.getElementById("playAgainBtn").addEventListener("click", () => {
-            
+
             this.wordsTyped = 0;
             this.score = 0;
             this.startTime = 0;
@@ -217,16 +218,10 @@ class Typer {
             document.querySelector("#info").style.display = "flex";
             document.querySelector("#time").innerHTML = "3";
             document.querySelector("#wordContainer").style.display = "none";
+            document.querySelector("#wordCount").style.display = "none";
 
             this.startCountdown();
-            this.startTime = performance.now();
 
-            this.keyListener = (e) => {
-                this.shorteWord(e.key);
-            };
-
-            window.addEventListener("keypress", this.keyListener);
-            
         });
     }
 }
