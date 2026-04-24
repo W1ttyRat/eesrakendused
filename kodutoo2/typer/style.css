@@ -33,3 +33,26 @@ body {
     min-height: 30px;
     align-items: start;
 }
+
+#pageLayout {
+    display: flex;
+    width: 100%;
+    min-height: 100vh;
+}
+
+#gameContainer {
+    flex: 0 0 80%;
+    width: 80%;
+}
+
+#sideContainer {
+    flex: 0 0 20%;
+    width: 20%;
+    transition: width 0.3s ease; flex-basis: 0.3s ease;
+    overflow: hidden;
+}
+
+#sideContainer.closed {
+    flex-basis: 0;
+    width: 0;
+}
