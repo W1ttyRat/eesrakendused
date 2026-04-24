@@ -1,13 +1,14 @@
 body {
     margin: 0;
     padding: 0;
+    font-family: "Open Sans", sans-serif;
 }
 
 .container {
     display: flex;
     justify-content: center;
     align-items: center;
-    min-height: 200px;
+    min-height: 300px;
     flex-direction: column;
 }
 
@@ -55,4 +56,28 @@ body {
 #sideContainer.closed {
     flex-basis: 0;
     width: 0;
+}
+
+#infoContainer {
+    background-color: azure;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+}
+
+#resultsContainer h2 {
+    font-family: "Sofia", sans-serif;
+    font-size: 36px;
+}
+
+#gameContainer > h1 {
+    font-family: "Sofia", sans-serif;
+    font-size: 48px;
+    text-align: center;
+}
+
+#info {
+    align-items: center;
+    justify-content: center;
 }

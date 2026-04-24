@@ -4,7 +4,7 @@ const API_BASE = "http://10.10.10.148:3000/api";
 class Typer {
     constructor() {
         this.name = "";
-        this.wordsInGame = 3;
+        this.wordsInGame = 5;
         this.wordLength = 5;
         this.startTime = 0;
         this.endTime = 0;
@@ -17,6 +17,7 @@ class Typer {
         this.results = [];
 
         this.loadFromFile();
+        this.playAgain();
     }
 
     loadResults() {
@@ -101,6 +102,7 @@ class Typer {
         document.querySelector("#info").style.display = "flex";
         document.querySelector("#wordContainer").style.display = "flex";
         document.querySelector("#name").style.display = "none";
+        document.querySelector("#playAgain").style.display = "none";
 
         this.startTime = performance.now();
 
@@ -140,6 +142,7 @@ class Typer {
         this.score = ((this.endTime - this.startTime) / 1000).toFixed(2); //
         window.removeEventListener("keypress", this.keyListener);
         document.getElementById("word").innerHTML = "Mäng läbi. Sinu aeg on: " + this.score + " sekundit."; //tofixed oli alguse ssiin
+        document.querySelector("#playAgain").style.display = "flex";
 
 
         this.saveResult();
@@ -162,12 +165,27 @@ class Typer {
     }
 
     generateWords() {
-        for (let i = 0; i < this.wordsInGame; i++) {
-            const len = this.wordsInGame + i;
-            const randomIndex = Math.floor(Math.random() * this.words[len].length);
-            this.typeWords[i] = this.words[len][randomIndex];
+        this.typeWords = [];
+
+        const allowedLengths = [];
+        for (let len = 1; len <=this.wordLength; len++) {
+            if (this.words[len] && this.words[len].length > 0) {
+                allowedLengths.push(len);
+            }
         }
 
+        if (allowedLengths.length === 0) {
+            throw new Error("No words available for the specified lengths");
+        }
+
+        for (let i = 0; i < this.wordsInGame; i++) {
+            const randomLength = allowedLengths[Math.floor(Math.random() * allowedLengths.length)];
+            const randomIndex = Math.floor(Math.random() * this.words[randomLength].length);
+
+            this.typeWords.push(this.words[randomLength][randomIndex]);
+        }
+
+        this.wordsTyped = 0;
         this.selectWord();
     }
 
@@ -182,6 +200,34 @@ class Typer {
 
     updateInfo() {
         document.getElementById("wordCount").innerHTML = "Sõnu trükitud: " + this.wordsTyped + "/" + this.wordsInGame;
+    }
+
+    playAgain() {
+        document.getElementById("playAgainBtn").addEventListener("click", () => {
+            
+            this.wordsTyped = 0;
+            this.score = 0;
+            this.startTime = 0;
+            this.endTime = 0;
+            this.word = "";
+            this.typeWords = [];
+
+            document.getElementById("word").style.color = "black";
+            document.querySelector("#name").style.display = "none";
+            document.querySelector("#info").style.display = "flex";
+            document.querySelector("#time").innerHTML = "3";
+            document.querySelector("#wordContainer").style.display = "none";
+
+            this.startCountdown();
+            this.startTime = performance.now();
+
+            this.keyListener = (e) => {
+                this.shorteWord(e.key);
+            };
+
+            window.addEventListener("keypress", this.keyListener);
+            
+        });
     }
 }
 

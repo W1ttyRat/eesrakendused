@@ -6,6 +6,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Typer</title>
     <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Sofia&effect=fire">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300..800;1,300..800&display=swap"
+        rel="stylesheet">
     <script src="typer.js" defer></script>
 
 </head>
@@ -14,10 +19,11 @@
     <button id="toggleSide">Ava küljepaneel</button>
     <div id="pageLayout">
         <div id="gameContainer">
+            <h1>Typer</h1>
             <div id="name" class="container">
                 <label for="name">Sisesta oma nimi</label>
                 <input type="text" id="username">
-                <input type="button" value="Salvesta" id="submitName">
+                <input type="button" value="Mängi" id="submitName">
             </div>
 
             <div id="counter" class="container">
@@ -31,18 +37,28 @@
             <div id="wordContainer" class="container">
                 <div id="word"></div>
                 <div id="score"></div>
+                <div id="playAgain">
+                    <button id="playAgainBtn">Mängi uuesti</button>
+                </div>
             </div>
 
             <div id="resultsContainer" class="container">
-                <h2>Top 20</h2>
+                <h2 class="font-effect-fire">Top 20</h2>
                 <div id="results"></div>
             </div>
         </div>
         <div id="sideContainer">
             <div id="infoContainer">
-                <label for="wordAmount">Sõnade kogus:</label>
-                <input type="number" id="wordAmount" value="5" min="1" max="20">
-                <label for="">Maksimu</label>
+                <div>
+                    <label for="wordAmount">Sõnade kogus:</label>
+                    <input type="number" id="wordAmount" value="5" min="1" max="20">
+                </div>
+                <div>
+                    <label for="wordLength">Maksimum sõna suurus</label>
+                    <input type="number" id="wordLength" value="5" min="1" max="20">
+                </div>
+
+                <button id="saveSettings">Salvesta sätted</button>
             </div>
         </div>
     </div>
