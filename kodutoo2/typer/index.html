@@ -44,16 +44,27 @@
                 </div>
 
                 <div id="infoContainer">
-                    <div>
-                        <label for="wordAmount">Sõnade kogus:</label>
-                        <input type="number" id="wordAmount" value="5" min="1" max="20">
-                    </div>
-                    <div>
-                        <label for="wordLength">Maksimum sõna suurus</label>
-                        <input type="number" id="wordLength" value="5" min="1" max="20">
+                    <div class="infoBox" id="settingsBox">
+                        <div>
+                            <label for="wordAmount">Sõnade kogus:</label>
+                            <input type="number" id="wordAmount" value="5" min="1" max="20">
+                        </div>
+                        <div>
+                            <label for="wordLength">Maksimum sõna suurus</label>
+                            <input type="number" id="wordLength" value="5" min="1" max="20">
+                        </div>
+
+                        <button id="saveSettings">Salvesta sätted</button>
                     </div>
 
-                    <button id="saveSettings">Salvesta sätted</button>
+                    <div class="infoBox" id="wpmInfo">
+                        <h3>WPM Hinnang</h3>
+                        <p>20 WPM: Väga aeglane</p>
+                        <p>40 WPM: Alla keskmise</p>
+                        <p>60 WPM: Keskmine</p>
+                        <p>80 WPM: Üle keskmise</p>
+                        <p>100 WPM: Kiire</p>
+                    </div>
                 </div>
 
             </div>

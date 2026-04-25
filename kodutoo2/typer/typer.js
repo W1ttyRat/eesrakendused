@@ -101,15 +101,20 @@ class Typer {
     }
 
     startCountdown() {
+        this.playSound("countdown");
         document.getElementById("counter").style.display = "flex";
         document.querySelector("#name").style.display = "none";
         let i = 3;
 
         let countdown = setInterval(() => {
+            if (i > 1) {
+                this.playSound("countdown");
+            }
             document.getElementById("time").innerHTML = i - 1;
             i--;
             if (i == 0) {
                 document.getElementById("counter").style.display = "none";
+                this.playSound("start");
                 this.startTyper();
                 clearInterval(countdown);
             }
@@ -160,10 +165,12 @@ class Typer {
     }
 
     endGame() {
+        this.playSound("gameover");
         this.endTime = performance.now();
         this.score = ((this.endTime - this.startTime) / 1000).toFixed(2); //
+        const wpm = ((this.wordsInGame / this.score) * 60).toFixed(2);
         window.removeEventListener("keypress", this.keyListener);
-        document.getElementById("word").innerHTML = "Mäng läbi. Sinu aeg on: " + this.score + " sekundit."; //tofixed oli alguse ssiin
+        document.getElementById("word").innerHTML = "Mäng läbi. Sinu aeg on: " + this.score + " sekundit. Sinu WPM on: " + wpm; //tofixed oli alguse ssiin
         document.querySelector("#playAgain").style.display = "flex";
 
 
@@ -244,6 +251,34 @@ class Typer {
             this.startCountdown();
 
         });
+    }
+
+    playSound(name) {
+        let audio;
+        switch (name) {
+            case "countdown":
+                audio = new Audio("countdown.wav");
+                audio.volume = 0.5;
+                audio.play();
+                break;
+            case "gameover":
+                audio = new Audio("gameover.mp3");
+                audio.volume = 0.5;
+                audio.play();
+                break;
+            case "start":
+                audio = new Audio("start.wav");
+                audio.volume = 0.5;
+                audio.play();
+                break;
+            case "click":
+                audio = new Audio("click.wav");
+                audio.volume = 0.5;
+                audio.play();
+                break;
+            default:
+                break;
+        }
     }
 }
 
