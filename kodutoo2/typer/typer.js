@@ -21,6 +21,12 @@ class Typer {
         this.results = [];
 
         this.loadFromFile();
+
+        const resultDifficulty = document.getElementById("resultDifficulty");
+        resultDifficulty.addEventListener("change", () => {
+            this.loadResultsFromFile();
+        });
+
         this.playAgain();
     }
 
@@ -43,7 +49,8 @@ class Typer {
             row.className = "resultRow";
 
             const time = parseFloat(this.results[i].time);
-            const wpm = ((this.wordsInGame / time) * 60).toFixed(2);
+            const difficultResult = this.getGameDifficulty(this.results[i].difficulty);
+            const wpm = time > 0 ? ((difficultResult / time) * 60).toFixed(2) : "0.00";
 
             row.innerHTML = `
                 <div class="resultRank">${i + 1}</div>
@@ -70,7 +77,9 @@ class Typer {
     }
 
     async loadResultsFromFile() {
-        const res = await fetch(`${API_BASE}/results`);
+        const difficultySelect = document.getElementById("resultDifficulty").value;
+
+        const res = await fetch(`${API_BASE}/results?difficulty=${encodeURIComponent(difficultySelect)}`);
         if (!res.ok) throw new Error("Failed to load results");
         this.results = await res.json();
         this.loadResults();
@@ -199,22 +208,9 @@ class Typer {
 
     generateWords() {
         this.typeWords = [];
-        const difficulty = document.getElementById("difficulty").value;
 
-        switch (difficulty) {
-            case "Lihtne":
-                this.wordLength = 4;
-                this.wordsInGame = 5;
-                return 5;
-            case "Keskmine":
-                this.wordLength = 6;
-                this.wordsInGame = 10;
-                return 10;
-            case "Raske":
-                this.wordLength = 8;
-                this.wordsInGame = 15;
-                return 15;
-        }
+        const difficulty = document.getElementById("difficulty").value;
+        this.getGameDifficulty(difficulty);
 
         const allowedLengths = [];
         for (let len = 1; len <= this.wordLength; len++) {
@@ -298,6 +294,25 @@ class Typer {
                 break;
             default:
                 break;
+        }
+    }
+
+    getGameDifficulty(difficulty) {
+        switch (difficulty) {
+            case "Lihtne":
+                this.wordLength = 4;
+                this.wordsInGame = 5;
+                return 5;
+            case "Keskmine":
+                this.wordLength = 6;
+                this.wordsInGame = 10;
+                return 10;
+            case "Raske":
+                this.wordLength = 8;
+                this.wordsInGame = 15;
+                return 15;
+            default:
+                return 0;
         }
     }
 }

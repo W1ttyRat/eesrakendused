@@ -11,14 +11,30 @@ app.use(express.json());
 
 app.get("/api/results", async (req, res) => {
     try {
-        const sql = `
-            SELECT name, difficulty, time_seconds AS time
-            FROM player_results
-            ORDER BY time_seconds ASC, created_at ASC
-            LIMIT 20
-            `;
+        const { difficulty } = req.query;
 
-        const { rows } = await pool.query(sql);
+        const allowed = ["Lihtne", "Keskmine", "Raske"];
+        if (difficulty && !allowed.includes(difficulty)) {
+            return res.status(400).json({ error: "Invalid difficulty" });
+        }
+
+        const sql = difficulty
+            ? `
+                SELECT name, difficulty, time_seconds AS time
+                FROM player_results
+                WHERE difficulty = $1
+                ORDER BY time_seconds ASC, created_at ASC
+                LIMIT 20
+              `
+            : `
+                SELECT name, difficulty, time_seconds AS time
+                FROM player_results
+                ORDER BY time_seconds ASC, created_at ASC
+                LIMIT 20
+              `;
+
+        const values = difficulty ? [difficulty] : [];
+        const { rows } = await pool.query(sql, values);
         res.json(rows);
     } catch (err) {
         console.log(err);
