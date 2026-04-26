@@ -12,12 +12,12 @@ app.use(express.json());
 app.get("/api/results", async (req, res) => {
     try {
         const sql = `
-            SELECT name, time_seconds AS time
+            SELECT name, difficulty, time_seconds AS time
             FROM player_results
             ORDER BY time_seconds ASC, created_at ASC
-            LIMIT 100
+            LIMIT 20
             `;
-        
+
         const { rows } = await pool.query(sql);
         res.json(rows);
     } catch (err) {
@@ -28,18 +28,18 @@ app.get("/api/results", async (req, res) => {
 
 app.post("/api/results", async (req, res) => {
     try {
-        const { name, time } = req.body;
-        if (!name || time === undefined) {
-            return res.status(400).json({ error: "Name and time are required" });
+        const { name, difficulty, time } = req.body;
+        if (!name || !difficulty || time === undefined) {
+            return res.status(400).json({ error: "Name, difficulty, and time are required" });
         }
 
         const sql = `
-            INSERT INTO player_results (name, time_seconds)
-            VALUES ($1, $2)
-            RETURNING id, name, time_seconds AS time, created_at
+            INSERT INTO player_results (name, difficulty, time_seconds)
+            VALUES ($1, $2, $3)
+            RETURNING id, name, difficulty, time_seconds AS time, created_at
             `;
 
-        const values = [name, Number(time)];
+        const values = [name, req.body.difficulty, Number(time)];
         const { rows } = await pool.query(sql, values);
 
         res.status(201).json(rows[0]);

@@ -295,7 +295,7 @@ input[type="button"]:active {
     width: 100%;
     min-width: 0;
     display: grid;
-    grid-template-columns: 32px minmax(0, 1fr) 62px 54px;
+    grid-template-columns: 32px minmax(0, 1fr) 62px 54px 74px;
     gap: 4px;
     align-items: center;
     border-radius: 8px;

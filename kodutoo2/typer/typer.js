@@ -1,11 +1,15 @@
 //console.log("fail ühendatud");
-const API_BASE = "http://10.10.10.148:3000/api";
+//const API_BASE = "http://10.10.10.148:3000/api";
+const API_BASE = "http://localhost:3000/api";
+
+//TODO: tulemuste tabelis raskusastme järgi sorteerimine
+
 
 class Typer {
     constructor() {
         this.name = "";
-        this.wordsInGame = 5;
-        this.wordLength = 5;
+        this.wordsInGame = 0;
+        this.wordLength = 0;
         this.startTime = 0;
         this.endTime = 0;
         this.word = "suvaline";
@@ -46,7 +50,7 @@ class Typer {
                 <div class="resultName">${this.results[i].name}</div>
                 <div class="resultTime">${this.results[i].time}s</div>
                 <div class="resultWPM">${wpm}</div>
-                `;
+            `;
 
             resultDiv.appendChild(row);
         }
@@ -88,7 +92,7 @@ class Typer {
             }
             this.words[wordLength].push(word);
         }
-        console.log(this.words);
+        //console.log(this.words);
         this.askName();
 
     }
@@ -178,7 +182,7 @@ class Typer {
     }
 
     async saveResult() {
-        const result = { name: this.name, time: this.score };
+        const result = { name: this.name, difficulty: document.getElementById("difficulty").value, time: this.score };
 
         try {
             const res = await fetch(`${API_BASE}/results`, {
@@ -195,6 +199,22 @@ class Typer {
 
     generateWords() {
         this.typeWords = [];
+        const difficulty = document.getElementById("difficulty").value;
+
+        switch (difficulty) {
+            case "Lihtne":
+                this.wordLength = 4;
+                this.wordsInGame = 5;
+                return 5;
+            case "Keskmine":
+                this.wordLength = 6;
+                this.wordsInGame = 10;
+                return 10;
+            case "Raske":
+                this.wordLength = 8;
+                this.wordsInGame = 15;
+                return 15;
+        }
 
         const allowedLengths = [];
         for (let len = 1; len <= this.wordLength; len++) {
