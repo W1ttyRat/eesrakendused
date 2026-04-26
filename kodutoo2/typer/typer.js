@@ -183,8 +183,12 @@ class Typer {
         this.score = ((this.endTime - this.startTime) / 1000).toFixed(2); //
         const wpm = ((this.wordsInGame / this.score) * 60).toFixed(2);
         window.removeEventListener("keypress", this.keyListener);
-        document.getElementById("word").innerHTML = "Mäng läbi. Sinu aeg on: " + this.score + " sekundit. Sinu WPM on: " + wpm; //tofixed oli alguse ssiin
-        document.querySelector("#playAgain").style.display = "flex";
+        this.endImage(wpm);
+
+        document.getElementById("word").textContent = `Suurepärane!!`;
+
+        document.getElementById("gameOverModal").classList.remove("hidden");
+        document.getElementById("playAgain").style.display = "flex";
 
 
         this.saveResult();
@@ -315,6 +319,36 @@ class Typer {
                 return 0;
         }
     }
+
+    endImage(wpm) {
+    const endImage = document.getElementById("endImage");
+
+    switch (true) {
+        case wpm < 20:
+            endImage.src = "https://images.unsplash.com/photo-1516321318423-f06f85e504b3?auto=format&fit=crop&w=900&q=80";
+            endImage.alt = "Slow typing";
+            document.getElementById("finalScore").innerHTML = "Sa pead rohkem harjutama! Sinu WPM on: " + wpm;
+            break;
+
+        case wpm >= 20 && wpm < 40:
+            endImage.src = "https://images.unsplash.com/photo-1516382799247-87df95d790b7?auto=format&fit=crop&w=900&q=80";
+            endImage.alt = "Average typing";
+            document.getElementById("finalScore").innerHTML = "Hea töö! Sinu WPM on: " + wpm;
+            break;
+
+        case wpm >= 40 && wpm < 60:
+            endImage.src = "https://images.unsplash.com/photo-1498050108023-c5249f4df085?auto=format&fit=crop&w=900&q=80";
+            endImage.alt = "Fast typing";
+            document.getElementById("finalScore").innerHTML = "Väga hea! Sinu WPM on: " + wpm;
+            break;
+
+        case wpm >= 60:
+            endImage.src = "https://images.unsplash.com/photo-1516321497487-e288fb19713f?auto=format&fit=crop&w=900&q=80";
+            endImage.alt = "Very fast typing";
+            document.getElementById("finalScore").innerHTML = "Suurepärane! Sinu WPM on: " + wpm;
+            break;
+        }
+    }
 }
 
 class Sidebar {
@@ -367,3 +401,7 @@ class Sidebar {
 
 let typer = new Typer();
 let sidebar = new Sidebar();
+
+document.getElementById("closeModalBtn").addEventListener("click", () => {
+    document.getElementById("gameOverModal").classList.add("hidden");
+});
