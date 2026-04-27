@@ -1,6 +1,8 @@
 //console.log("fail ühendatud");
 //const API_BASE = "http://10.10.10.148:3000/api";
-const API_BASE = "http://localhost:3000/api";
+//const API_BASE = "http://localhost:3000/api";
+const API_BASE = `${window.location.protocol}//${window.location.hostname}:3000/api`;
+//const API_BASE = "/api";
 
 //TODO: tulemuste tabelis raskusastme järgi sorteerimine
 
@@ -19,6 +21,11 @@ class Typer {
         this.score = 0;
 
         this.results = [];
+
+        this.mobileInput = document.getElementById("mobileTyperInput");
+        this.isMobileMode = window.matchMedia("(pointer: coarse)").matches;
+        this.mobileInputHandler = null;
+        this.mobileBlurHandler = null;
 
         this.loadFromFile();
 
@@ -146,30 +153,69 @@ class Typer {
 
         this.startTime = performance.now();
 
-        this.keyListener = (e) => {
-            this.shorteWord(e.key);
-            // console.log(e.key);
-        };
+        if (this.keyListener) {
+            window.removeEventListener("keydown", this.keyListener);
+            this.keyListener = null;
+        }
+        if (this.mobileInput && this.mobileInputHandler) {
+            this.mobileInput.removeEventListener("input", this.mobileInputHandler);
+            this.mobileInputHandler = null;
+        }
+        if (this.mobileInput && this.mobileBlurHandler) {
+            this.mobileInput.removeEventListener("blur", this.mobileBlurHandler);
+            this.mobileBlurHandler = null;
+        }
 
-        window.addEventListener("keypress", this.keyListener);
+        if (this.isMobileMode && this.mobileInput) {
+            this.mobileInput.style.display = "block";
+            this.mobileInput.value = "";
+            this.mobileInput.focus();
 
+            this.mobileInputHandler = (e) => {
+                const value = e.target.value;
+                if (!value) return;
+
+                const lastChar = value[value.length - 1];
+                this.shortenWord(lastChar);
+                e.target.value = "";
+            };
+
+            this.mobileBlurHandler = () => {
+                setTimeout(() => this.mobileInput && this.mobileInput.focus(), 50);
+            };
+
+            this.mobileInput.addEventListener("input", this.mobileInputHandler);
+            this.mobileInput.addEventListener("blur", this.mobileBlurHandler);
+        } else {
+            this.keyListener = (e) => {
+                this.shortenWord(e.key);
+            };
+            window.addEventListener("keydown", this.keyListener);
+        }
     }
 
-    shorteWord(keypressed) {
-        if (this.word[0] === keypressed && this.word.length > 1 && this.typeWords.length > this.wordsTyped) {
+    shortenWord(keypressed) {
+        if (!keypressed || keypressed.length !== 1) return;
+
+        const key = (keypressed || "").toLowerCase();
+        const expected = (this.word[0] || "").toLowerCase();
+
+        if (expected === key && this.word.length > 1 && this.typeWords.length > this.wordsTyped) {
+            this.playSound("wordClick");
             this.word = this.word.slice(1);
             this.drawWord();
-        } else if (this.word[0] === keypressed && this.word.length == 1 && this.wordsTyped <= this.typeWords.length - 2) {
+        } else if (expected === key && this.word.length == 1 && this.wordsTyped <= this.typeWords.length - 2) {
             //console.log( this.typeWords.length -1, this.wordsTyped);
             this.wordsTyped++;
             this.updateInfo();
             this.selectWord();
-        } else if (this.word[0] === keypressed && this.word.length == 1 && this.typeWords.length - 1 == this.wordsTyped) {
+        } else if (expected === key && this.word.length == 1 && this.typeWords.length - 1 == this.wordsTyped) {
             this.wordsTyped++;
             this.updateInfo();
             this.endGame();
-        } else if (this.word[0] != keypressed) {
+        } else if (expected !== key) {
             document.getElementById("word").style.color = "red";
+            this.playSound("error");
             setTimeout(() => {
                 document.getElementById("word").style.color = "black";
             }, 100);
@@ -177,12 +223,29 @@ class Typer {
 
     }
 
-    endGame() {
+    async endGame() {
         this.playSound("gameover");
         this.endTime = performance.now();
         this.score = ((this.endTime - this.startTime) / 1000).toFixed(2); //
         const wpm = ((this.wordsInGame / this.score) * 60).toFixed(2);
-        window.removeEventListener("keypress", this.keyListener);
+
+        if (this.keyListener) {
+            window.removeEventListener("keydown", this.keyListener);
+            this.keyListener = null;
+        }
+        if (this.mobileInput && this.mobileInputHandler) {
+            this.mobileInput.removeEventListener("input", this.mobileInputHandler);
+            this.mobileInputHandler = null;
+        }
+        if (this.mobileInput && this.mobileBlurHandler) {
+            this.mobileInput.removeEventListener("blur", this.mobileBlurHandler);
+            this.mobileBlurHandler = null;
+        }
+        if (this.mobileInput) {
+            this.mobileInput.blur();
+            this.mobileInput.style.display = "none";
+        }
+
         this.endImage(wpm);
 
         document.getElementById("word").textContent = `Suurepärane!!`;
@@ -191,7 +254,7 @@ class Typer {
         document.getElementById("playAgain").style.display = "flex";
 
 
-        this.saveResult();
+        await this.saveResult();
     }
 
     async saveResult() {
@@ -293,6 +356,16 @@ class Typer {
                 break;
             case "click":
                 audio = new Audio("click.wav");
+                audio.volume = 0.5;
+                audio.play();
+                break;
+            case "wordClick":
+                audio = new Audio("wordClick.wav");
+                audio.volume = 0.5;
+                audio.play();
+                break;
+            case "error":
+                audio = new Audio("error.wav");
                 audio.volume = 0.5;
                 audio.play();
                 break;
